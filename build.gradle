@@ -6,11 +6,11 @@ plugins {
 group 'ch.bildspur'
 version '0.6.1'
 
-sourceCompatibility = 1.8
+sourceCompatibility = 11
 
 wrapper {
-    gradleVersion = '5.6.3'
-    distributionUrl = 'https://services.gradle.org/distributions/gradle-$gradleVersion-all.zip'
+    gradleVersion = '6.3'
+    distributionUrl = "https://services.gradle.org/distributions/gradle-$gradleVersion-all.zip"
 }
 
 repositories {
@@ -18,15 +18,12 @@ repositories {
 }
 
 dependencies {
-    testCompile group: 'junit', name: 'junit', version: '4.12'
-
-    // xml -> not available in java 11
-    compile group: 'javax.xml.bind', name: 'jaxb-api', version: '2.3.0'
-    compile group: 'com.sun.xml.bind', name: 'jaxb-core', version: '2.3.0'
-    compile group: 'com.sun.xml.bind', name: 'jaxb-impl', version: '2.3.0'
+    testImplementation('org.junit.jupiter:junit-jupiter-api:5.6.2')
+    testRuntimeOnly('org.junit.jupiter:junit-jupiter-engine:5.6.2')
+    testImplementation('org.hamcrest:hamcrest:2.2')
 
     // processing
-    testCompile group: 'org.processing', name: 'core', version: '3.3.6'
+    testCompile group: 'org.processing', name: 'core', version: '3.3.7'
     testCompile group: 'org.jogamp.jogl', name: 'jogl-all-main', version: '2.3.2'
     testCompile group: 'org.jogamp.gluegen', name: 'gluegen-rt-main', version: '2.3.2'
 }

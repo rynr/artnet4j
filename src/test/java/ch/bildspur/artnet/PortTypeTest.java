@@ -1,17 +1,14 @@
 package ch.bildspur.artnet;
 
 import static org.hamcrest.CoreMatchers.equalTo;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.util.List;
 
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
+import org.junit.jupiter.api.Test;
 
 public class PortTypeTest {
-    @Rule
-    public ExpectedException thrown = ExpectedException.none();
 
     @Test
     public void expectPortTypeRetrievedCorrectly() throws ArtNetException {
@@ -37,12 +34,12 @@ public class PortTypeTest {
             assertThat(portType.getPortID(), equalTo(portType.ordinal()));
         }
     }
-    
+
     @Test
-    public void verify() throws ArtNetException {
-        thrown.expect(ArtNetException.class);
-        thrown.expectMessage("Invalid PortType ID: 8");
-        
-        PortType.fromId(8);
+    public void verifyInvalidIdsCauseException() throws ArtNetException {
+        ArtNetRuntimeException exception = assertThrows(ArtNetRuntimeException.class, () -> {
+            PortType.fromId(8);
+        });
+        assertThat(exception.getMessage(), equalTo("Invalid PortType ID: 8"));
     }
 }

@@ -1,16 +1,17 @@
 package ch.bildspur.artnet;
 
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.instanceOf;
 
-import org.hamcrest.CoreMatchers;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class NodeStyleTest {
 
     @Test
     public void verifyStyleIdIsSameAsOrdinal() {
         for (NodeStyle nodeStyle : NodeStyle.values()) {
-            assertThat(nodeStyle.getStyleID(), CoreMatchers.equalTo(nodeStyle.ordinal()));
+            assertThat(nodeStyle.getStyleID(), equalTo(nodeStyle.ordinal()));
         }
     }
 
@@ -18,7 +19,7 @@ public class NodeStyleTest {
     public void verifyCanCreateArtnetNodeForAllNodeStyles() {
         for (NodeStyle nodeStyle : NodeStyle.values()) {
             ArtNetNode createdNode = nodeStyle.createNode();
-            assertThat(createdNode.getClass(), CoreMatchers.instanceOf(nodeStyle.getNodeClass()));
+            assertThat(createdNode.getClass(), instanceOf(nodeStyle.getNodeClass().getClass()));
         }
     }
 }
