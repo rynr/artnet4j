@@ -16,22 +16,26 @@
  * You should have received a copy of the GNU General Public License
  * along with artnet4j. If not, see <http://www.gnu.org/licenses/>.
  */
+
 package ch.bildspur.artnet;
 
-import java.text.MessageFormat;
+public class ArtNetRuntimeException extends RuntimeException {
 
-public enum PortType {
-    DMX512, MIDI, AVAB, COLORTRAN, ADB62_5, ARTNET;
+    private static final long serialVersionUID = 1L;
 
-    public static PortType fromId(int id) {
-        int ordinal = id & 0x3f;
-        if (ordinal > values().length) {
-            throw new ArtNetRuntimeException(MessageFormat.format("Invalid PortType ID: {0}", id));
-        }
-        return values()[ordinal];
+    public ArtNetRuntimeException() {
+        super();
     }
 
-    public int getPortID() {
-        return ordinal();
+    public ArtNetRuntimeException(String message) {
+        super(message);
+    }
+
+    public ArtNetRuntimeException(String message, Throwable cause) {
+        super(message, cause);
+    }
+
+    public ArtNetRuntimeException(Throwable cause) {
+        super(cause);
     }
 }

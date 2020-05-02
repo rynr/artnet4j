@@ -19,71 +19,111 @@
 
 package ch.bildspur.artnet;
 
+import java.text.MessageFormat;
+import java.util.Objects;
+
+/**
+ * This PortDescriptor is immutable. Once initialized, it cannot be changed. A
+ * change will end up with a new version.
+ */
 public class PortDescriptor {
 
-    protected boolean canOutput;
-    protected boolean canInput;
-    protected PortType type;
+    private static final int INPUT_FLAG = 0x40;
+    private static final int OUTPUT_FLAG = 0x80;
+    private final int id;
 
-    public PortDescriptor()
-    {
-    }
-
+    /**
+     * Creates a new {@link PortDescriptor} by it's id.
+     *
+     * @param id The id of the {@link PortDescriptor}.
+     */
     public PortDescriptor(int id) {
-        canOutput = (id & 0x80) > 0;
-        canInput = (id & 0x40) > 0;
-        id &= 0x3f;
-        for (PortType t : PortType.values()) {
-            if (id == t.getPortID()) {
-                type = t;
-            }
-        }
+        this.id = id;
     }
 
     /**
-     * @return the canInput
+     * @return True, if the {@link PortDescriptor} can input data.
      */
     public boolean canInput() {
-        return canInput;
+        return (id & INPUT_FLAG) > 0;
     }
 
     /**
-     * @return the canOutput
+     * @return True, if the {@link PortDescriptor} can output data.
      */
     public boolean canOutput() {
-        return canOutput;
+        return (id & OUTPUT_FLAG) > 0;
     }
 
     /**
-     * @return the type
+     * @return {@link PortType} of the {@link PortDescriptor}.
      */
     public PortType getType() {
-        return type;
+        return PortType.fromId(id);
     }
 
-    public int getData()
-    {
-        int data = type.getPortID();
-        data |= canInput ? 0x40 : 0;
-        data |= canOutput ? 0x80 : 0;
-        return data;
+    public int getData() {
+        return id;
     }
 
     @Override
     public String toString() {
-        return "PortDescriptor: " + type + " out: " + canOutput + " in: "
-                + canInput;
+        return MessageFormat.format("PortDescriptor[{}, {0} i:{1} o:{2}]", id, PortType.fromId(id),
+                canInput() ? "✓" : "✗", canOutput() ? "✓" : "✗");
     }
 
-    public void setCanOutput(boolean canOutput) {
-        this.canOutput = canOutput;
+    /**
+     * Clone of the {@link PortDescriptor} that has a specified output
+     * configuration.
+     *
+     * @param canOutput boolean value, if the resulting {@link PortDescriptor} can
+     *                  output
+     * @return Clone of the original {@link PortDescriptor} that has the given
+     *         output ability
+     */
+    public PortDescriptor setCanOutput(boolean canOutput) {
+        return new PortDescriptor(canOutput ? id | OUTPUT_FLAG : id & ~OUTPUT_FLAG);
     }
 
-    public void setCanInput(boolean canInput) {
-        this.canInput = canInput;
+    /**
+     * Clone of the {@link PortDescriptor} that has a specified output
+     * configuration.
+     *
+     * @param canInput boolean value, if the resulting {@link PortDescriptor} can
+     *                 input
+     * @return Clone of the original {@link PortDescriptor} that has the given input
+     *         ability
+     */
+    public PortDescriptor setCanInput(boolean canInput) {
+        return new PortDescriptor(canInput ? id | INPUT_FLAG : id & ~INPUT_FLAG);
     }
 
-    public void setType(PortType type) {
-        this.type = type;
+    /**
+     * Clone of the {@link PortDescriptor} that has a specified {@link PortType}.
+     *
+     * @param type {@link PortType} that the resulting clone should be of
+     * @return Clone of the original {@link PortDescriptor} that has the given
+     *         {@link PortType}
+     */
+    public PortDescriptor setType(PortType type) {
+        return new PortDescriptor((this.id & (INPUT_FLAG | OUTPUT_FLAG)) | type.getPortID());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
+    }
+
+    // TODO replace with lombok (or similar)
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null || PortDescriptor.class != obj.getClass()) {
+            return false;
+        }
+        PortDescriptor other = (PortDescriptor) obj;
+        return Objects.equals(this.id, other.id);
     }
 }
