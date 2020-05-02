@@ -197,7 +197,7 @@ public class ArtPollReplyPacket extends ArtNetPacket {
 
         // node report
         // id
-        byte[] reportCodeData = reportCode.getID().getBytes();
+        byte[] reportCodeData = reportCode.getId().getBytes();
         data.setByteChunk(reportCodeData, 108, reportCodeData.length);
 
         // description

@@ -19,13 +19,15 @@
 
 package ch.bildspur.artnet;
 
-import java.text.MessageFormat;
-import java.util.Objects;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 /**
  * This PortDescriptor is immutable. Once initialized, it cannot be changed. A
  * change will end up with a new version.
  */
+@ToString
+@EqualsAndHashCode
 public class PortDescriptor {
 
     private static final int INPUT_FLAG = 0x40;
@@ -66,12 +68,6 @@ public class PortDescriptor {
         return id;
     }
 
-    @Override
-    public String toString() {
-        return MessageFormat.format("PortDescriptor[{}, {0} i:{1} o:{2}]", id, PortType.fromId(id),
-                canInput() ? "✓" : "✗", canOutput() ? "✓" : "✗");
-    }
-
     /**
      * Clone of the {@link PortDescriptor} that has a specified output
      * configuration.
@@ -107,23 +103,5 @@ public class PortDescriptor {
      */
     public PortDescriptor setType(PortType type) {
         return new PortDescriptor((this.id & (INPUT_FLAG | OUTPUT_FLAG)) | type.getPortID());
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id);
-    }
-
-    // TODO replace with lombok (or similar)
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (obj == null || PortDescriptor.class != obj.getClass()) {
-            return false;
-        }
-        PortDescriptor other = (PortDescriptor) obj;
-        return Objects.equals(this.id, other.id);
     }
 }

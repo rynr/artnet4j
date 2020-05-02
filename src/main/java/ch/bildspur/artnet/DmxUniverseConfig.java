@@ -19,25 +19,21 @@
 
 package ch.bildspur.artnet;
 
+import java.io.Serializable;
 import java.net.InetAddress;
 
-public class DmxUniverseConfig {
+import lombok.Builder;
+import lombok.Data;
 
-    public String id;
+@Builder
+@Data
+public class DmxUniverseConfig implements Serializable {
+    private static final long serialVersionUID = 1L;
 
-    public InetAddress ip;
-
-    public int universeID;
-
-    public int numDmxChannels;
-
-    public int serverPort;
-
-    public boolean ignoreNumChannels;
-
-    @Override
-    public String toString() {
-        return "nodeConfig: id=" + id + ", ip=" + ip + ", uid=" + universeID
-                + ", nc=" + numDmxChannels;
-    }
+    private final String id;
+    private final InetAddress ip;
+    private final int universeID;
+    private final int numDmxChannels;
+    private final int serverPort;
+    private final boolean ignoreNumChannels;
 }
