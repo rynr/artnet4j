@@ -18,16 +18,20 @@
  */
 package ch.bildspur.artnet;
 
+import java.text.MessageFormat;
+
 public enum PortType {
-    DMX512(0), MIDI(1), AVAB(2), COLORTRAN(3), ADB62_5(4), ARTNET(5);
+    DMX512, MIDI, AVAB, COLORTRAN, ADB62_5, ARTNET;
 
-    private int id;
-
-    private PortType(int id) {
-        this.id = id;
+    public static PortType fromId(int id) throws ArtNetException {
+        int ordinal = id & 0x3f;
+        if(ordinal > values().length) {
+            throw new ArtNetException(MessageFormat.format("Invalid PortType ID: {0}", id));
+        }
+        return values()[ordinal];
     }
 
     public int getPortID() {
-        return id;
+        return ordinal();
     }
 }
