@@ -20,31 +20,28 @@
 package ch.bildspur.artnet;
 
 public enum NodeStyle {
-    ST_NODE(0, ArtNetNode.class), ST_SERVER(1, ArtNetServer.class), ST_MEDIA(2,
-            ArtNetNode.class), ST_ROUTER(3, ArtNetNode.class), ST_BACKUP(4,
-            ArtNetNode.class), ST_CONFIG(5, ArtNetNode.class);
+    ST_NODE(ArtNetNode.class), ST_SERVER(ArtNetServer.class), ST_MEDIA(ArtNetNode.class), ST_ROUTER(ArtNetNode.class),
+    ST_BACKUP(ArtNetNode.class), ST_CONFIG(ArtNetNode.class);
 
-    private int id;
-    private Class<? extends ArtNetNode> nodeClass;
+    private final Class<? extends ArtNetNode> nodeClass;
 
-    private NodeStyle(int id, Class<? extends ArtNetNode> nodeClass) {
-        this.id = id;
+    private NodeStyle(Class<? extends ArtNetNode> nodeClass) {
         this.nodeClass = nodeClass;
     }
 
     public ArtNetNode createNode() {
-        ArtNetNode node = null;
         try {
-            node = nodeClass.newInstance();
-        } catch (InstantiationException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
+            return nodeClass.getConstructor().newInstance();
+        } catch (ReflectiveOperationException ex) {
+            throw new ArtNetRuntimeException("Could not instantiate " + nodeClass.getName(), ex);
         }
-        return node;
+    }
+
+    Class<? extends ArtNetNode> getNodeClass() {
+        return nodeClass;
     }
 
     public int getStyleID() {
-        return id;
+        return ordinal();
     }
 }
