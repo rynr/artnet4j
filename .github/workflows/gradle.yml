@@ -14,4 +14,4 @@ jobs:
       with:
         java-version: 11
     - name: Build with Gradle
-      run: s./gradlew build sonarqube -DSONAR_HOST_URL={{ SONAR_HOST_URL }} -DSONAR_TOKEN={{ SONAR_TOKEN }}
+      run: ./gradlew build
