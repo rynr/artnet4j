@@ -1,6 +1,7 @@
 plugins {
     id 'java-library'
     id 'maven-publish'
+    id 'org.sonarqube' version '2.8'
 }
 
 group 'ch.bildspur'
@@ -30,6 +31,15 @@ dependencies {
 
 configurations {
     jar.archiveName = "artnet4j-${version}.jar"
+}
+
+sonarqube {
+  properties {
+    property "sonar.projectKey", "rynr_artnet4j"
+    property "sonar.organization", "rynr-github"
+    property "sonar.host.url", System.getProperty("SONAR_HOST_URL")
+    property "sonar.login", System.getProperty("SONAR_TOKEN")
+  }
 }
 
 task sourcesJar(type: Jar) {
